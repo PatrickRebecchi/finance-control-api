@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Size;
 public record UserCreateDTO (@NotBlank String nickName,
                              @NotBlank String fullName,
                              @NotBlank @Email String email,
-                             @NotBlank
-                             @Size(min = 6, message = "Senha precisa ter pelo menos 6 caracterios")
+                             @NotBlank @Size(min = 6, message = "Senha precisa ter pelo menos 6 caracterios")
                              String password) {
 }

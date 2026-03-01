@@ -1,5 +1,6 @@
 package com.patrick.finance.service;
 
+import com.patrick.finance.dto.DtoTest;
 import com.patrick.finance.dto.UserCreateDTO;
 import com.patrick.finance.dto.UserResponseDTO;
 import com.patrick.finance.entity.User;
@@ -56,12 +57,28 @@ public class UserService
 
     private List<UserResponseDTO> converteDados(List<User> user){
         return user.stream()
-                .map(s -> new UserResponseDTO(s.getId(), s.getFullName(), s.getNickName(), s.getPassword()))
+                .map(s -> new UserResponseDTO(
+                        s.getId(),
+                        s.getNickName(),
+                        s.getFullName(),
+                        s.getEmail()))
+                .collect(Collectors.toList());
+    }
+    private List<DtoTest> converteDadosComSenha(List<User> user){
+        return user.stream()
+                .map(s -> new DtoTest(
+                        s.getId(),
+                        s.getEmail(),
+                        s.getPassword()))
                 .collect(Collectors.toList());
     }
 
     public List<UserResponseDTO> obterTodosUsuarios() {
         return converteDados(repository.findAll());
     }
+    public List<DtoTest> obterTodosUsuariosESenha() {
+        return converteDadosComSenha(repository.findAll());
+    }
+
 
 }
