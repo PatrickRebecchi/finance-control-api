@@ -2,6 +2,7 @@ package com.patrick.finance.controller;
 import com.patrick.finance.dto.DtoTest;
 import com.patrick.finance.dto.UserCreateDTO;
 import com.patrick.finance.dto.UserResponseDTO;
+import com.patrick.finance.dto.UserSummaryDTO;
 import com.patrick.finance.exception.EmailAlreadyExistsException;
 import com.patrick.finance.service.UserService;
 import jakarta.validation.Valid;
@@ -24,6 +25,11 @@ public class UserController {
     @GetMapping
     public List<UserResponseDTO> obterUser() {
         return service.obterTodosUsuarios();
+    }
+
+    @GetMapping("/{id}")
+    public UserSummaryDTO obterUserPorId(@PathVariable Long id){
+        return service.obterUserPorId(id);
     }
 
     @GetMapping("/senha")

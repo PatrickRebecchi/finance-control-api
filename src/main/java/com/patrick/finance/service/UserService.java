@@ -3,15 +3,20 @@ package com.patrick.finance.service;
 import com.patrick.finance.dto.DtoTest;
 import com.patrick.finance.dto.UserCreateDTO;
 import com.patrick.finance.dto.UserResponseDTO;
+import com.patrick.finance.dto.UserSummaryDTO;
 import com.patrick.finance.entity.User;
 import com.patrick.finance.exception.EmailAlreadyExistsException;
+import com.patrick.finance.exception.GlobalExceptionHandler;
+import com.patrick.finance.exception.UserNotFoundException;
 import com.patrick.finance.repository.UserRepository;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,7 +37,6 @@ public class UserService
         if (repository.existsByEmail(dto.email())) {
             throw new EmailAlreadyExistsException("Email já cadastrado!");
         }
-
         // Criptografa senha
         String encryptedPassword = encoder.encode(dto.password());
 
@@ -81,4 +85,12 @@ public class UserService
     }
 
 
+    public UserSummaryDTO obterUserPorId(Long id) {
+        Optional<User> user = repository.findById(id);
+        if (user.isPresent()){
+            User u = user.get();
+            return new UserSummaryDTO(u.getId(), u.getNickName());
+        }
+        throw new UserNotFoundException("Usuario não encontrado!");
+    }
 }
