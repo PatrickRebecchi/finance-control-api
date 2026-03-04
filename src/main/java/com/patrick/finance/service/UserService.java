@@ -23,17 +23,21 @@ import java.util.stream.Collectors;
 public class UserService
 {
     @Autowired
-    private UserRepository repository;
+//    private UserRepository repository;
+//    private final PasswordEncoder encoder;
+
+    private final UserRepository repository;
     private final PasswordEncoder encoder;
 
-    public UserService( PasswordEncoder encoder) {
+    public UserService(UserRepository repository, PasswordEncoder encoder) {
+        this.repository = repository;
         this.encoder = encoder;
     }
 
 
     public UserResponseDTO createUser(UserCreateDTO dto) {
 
-        // Verifica se email já existe
+        // Verifica se o email já existe
         if (repository.existsByEmail(dto.email())) {
             throw new EmailAlreadyExistsException("Email já cadastrado!");
         }
@@ -68,6 +72,7 @@ public class UserService
                         s.getEmail()))
                 .collect(Collectors.toList());
     }
+
     private List<DtoTest> converteDadosComSenha(List<User> user){
         return user.stream()
                 .map(s -> new DtoTest(
