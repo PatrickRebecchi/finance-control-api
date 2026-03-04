@@ -12,26 +12,22 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ResponseError> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
+        return buildResponse(ex.getMessage(), HttpStatus.CONFLICT);
 
-        ResponseError responde = new ResponseError(
-                ex.getMessage(),
-                HttpStatus.BAD_REQUEST,
-                LocalDateTime.now());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responde);
+        // Metodo que usamos no modo inicial
+//        ResponseError responde = new ResponseError(
+//                ex.getMessage(),
+//                HttpStatus.BAD_REQUEST,
+//                LocalDateTime.now());
+//
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responde);
 
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ResponseError> handleUserNotFound(UserNotFoundException ex) {
-
-        ResponseError responde = new ResponseError(
-                ex.getMessage(),
-                HttpStatus.BAD_REQUEST,
-                LocalDateTime.now()
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responde);
+        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
@@ -42,5 +38,10 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responde);
+    }
+
+    private ResponseEntity<ResponseError> buildResponse(String message, HttpStatus status) {
+        ResponseError error = new ResponseError(message, status, LocalDateTime.now());
+        return ResponseEntity.status(status).body(error);
     }
 }
